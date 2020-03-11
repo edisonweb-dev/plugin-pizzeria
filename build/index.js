@@ -138,16 +138,25 @@ registerBlockType("lapizzeria/boxes", {
       selector: ".box p"
     },
     colorFondo: {
-      type: 'string'
+      type: "string"
+    },
+    colorTexto: {
+      type: "string"
+    },
+    alineacionContenido: {
+      type: "string",
+      default: "center"
     }
   },
   edit: function edit(props) {
-    // console.log(props)
-    // Extraer el contenido desde props
+    console.log(props); // Extraer el contenido desde props
+
     var _props$attributes = props.attributes,
         headingBox = _props$attributes.headingBox,
         textoBox = _props$attributes.textoBox,
         colorFondo = _props$attributes.colorFondo,
+        colorTexto = _props$attributes.colorTexto,
+        alineacionContenido = _props$attributes.alineacionContenido,
         setAttributes = props.setAttributes;
 
     var onChangeHeadingBox = function onChangeHeadingBox(nuevoHeading) {
@@ -163,9 +172,20 @@ registerBlockType("lapizzeria/boxes", {
     };
 
     var onChangeColorFondo = function onChangeColorFondo(nuevoColor) {
-      // console.log(nuevoColor)
       setAttributes({
         colorFondo: nuevoColor
+      });
+    };
+
+    var onChangeColorTexto = function onChangeColorTexto(nuevoColor) {
+      setAttributes({
+        colorTexto: nuevoColor
+      });
+    };
+
+    var onChangeAlinearContenido = function onChangeAlinearContenido(nuevaAlineacion) {
+      setAttributes({
+        alineacionContenido: nuevaAlineacion
       });
     };
 
@@ -181,35 +201,70 @@ registerBlockType("lapizzeria/boxes", {
     }, "Color de Fondo"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(ColorPalette, {
       onChange: onChangeColorFondo,
       value: colorFondo
-    }))))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+    })))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(PanelBody, {
+      title: "Color de Texto",
+      initialOpen: false
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+      className: "components-base-control"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+      className: "components-base-control__field"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("label", {
+      className: "components-base-control__label"
+    }, "Color de Texto"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(ColorPalette, {
+      onChange: onChangeColorTexto,
+      value: colorTexto
+    }))))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(BlockControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(AlignmentToolbar, {
+      onChange: onChangeAlinearContenido
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
       className: "box",
       style: {
-        backgroundColor: colorFondo
+        backgroundColor: colorFondo,
+        textAlign: alineacionContenido
       }
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText, {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", {
+      style: {
+        color: colorTexto
+      }
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText, {
       placeholder: "Agrega el Encabezado",
       onChange: onChangeHeadingBox,
       value: headingBox
-    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText, {
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", {
+      style: {
+        color: colorTexto
+      }
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText, {
       placeholder: "Agrega el Texto",
       onChange: onChangeTextoBox,
       value: textoBox
     }))));
   },
   save: function save(props) {
-    // console.log(props)
+    console.log(props); // Extraer el contenido desde props
+
     var _props$attributes2 = props.attributes,
         headingBox = _props$attributes2.headingBox,
         textoBox = _props$attributes2.textoBox,
-        colorFondo = _props$attributes2.colorFondo;
+        colorFondo = _props$attributes2.colorFondo,
+        colorTexto = _props$attributes2.colorTexto,
+        alineacionContenido = _props$attributes2.alineacionContenido;
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
       className: "box",
       style: {
-        backgroundColor: colorFondo
+        backgroundColor: colorFondo,
+        textAlign: alineacionContenido
       }
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText.Content, {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", {
+      style: {
+        color: colorTexto
+      }
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText.Content, {
       value: headingBox
-    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText.Content, {
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", {
+      style: {
+        color: colorTexto
+      }
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText.Content, {
       value: textoBox
     })));
   }
