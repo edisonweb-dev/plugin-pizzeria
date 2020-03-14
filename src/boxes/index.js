@@ -12,7 +12,7 @@ const { PanelBody } = wp.components;
 import { ReactComponent as Logo } from "../pizzeria-icon.svg";
 
 /**  
-    7 Pasos para crear un Bloque en Gutenberg 
+        ---7 Pasos para crear un Bloque en Gutenberg ---
     1.- Importar el componente(s) que utilizarás
     2.- Coloca el componente donde deseas utilizarlo.
     3.- Crea una función que lea los contenidos

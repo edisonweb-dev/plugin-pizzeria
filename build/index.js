@@ -110,7 +110,7 @@ var PanelBody = wp.components.PanelBody; // Logo para el bloque
 
 
 /**  
-    7 Pasos para crear un Bloque en Gutenberg 
+        ---7 Pasos para crear un Bloque en Gutenberg ---
     1.- Importar el componente(s) que utilizarás
     2.- Coloca el componente donde deseas utilizarlo.
     3.- Crea una función que lea los contenidos
@@ -282,7 +282,132 @@ registerBlockType("lapizzeria/boxes", {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _boxes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./boxes */ "./src/boxes/index.js");
+/* harmony import */ var _menu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu */ "./src/menu/index.js");
 
+
+
+/***/ }),
+
+/***/ "./src/menu/index.js":
+/*!***************************!*\
+  !*** ./src/menu/index.js ***!
+  \***************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _pizzeria_icon_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../pizzeria-icon.svg */ "./src/pizzeria-icon.svg");
+
+var registerBlockType = wp.blocks.registerBlockType;
+var withSelect = wp.data.withSelect;
+var _wp$editor = wp.editor,
+    RichText = _wp$editor.RichText,
+    InspectorControls = _wp$editor.InspectorControls;
+var _wp$components = wp.components,
+    PanelBody = _wp$components.PanelBody,
+    RangeControl = _wp$components.RangeControl,
+    SelectControl = _wp$components.SelectControl,
+    TextControl = _wp$components.TextControl;
+
+/**  
+        ---7 Pasos para crear un Bloque en Gutenberg ---
+    1.- Importar el componente(s) que utilizarás
+    2.- Coloca el componente donde deseas utilizarlo.
+    3.- Crea una función que lea los contenidos
+    4.- Registra un atributo
+    5.- Extraer el contenido desde props
+    6.- Guarda el contenido con setAttributes
+    7.- Lee los contenidos guardados en save()
+*/
+
+registerBlockType("lapizzeria/menu", {
+  // JSON
+  title: "La Pizzeria Menu",
+  icon: {
+    src: _pizzeria_icon_svg__WEBPACK_IMPORTED_MODULE_1__["ReactComponent"]
+  },
+  category: "lapizzeria",
+  attributes: {
+    cantidadMostrar: {
+      type: 'number',
+      default: 4
+    }
+  },
+  edit: withSelect(function (select, props) {
+    // extraer los valores
+    var cantidadMostrar = props.attributes.cantidadMostrar,
+        setAttributes = props.setAttributes;
+
+    var onChangeCantidadMostrar = function onChangeCantidadMostrar(nuevaCantidad) {
+      setAttributes({
+        cantidadMostrar: parseInt(nuevaCantidad)
+      });
+    };
+
+    return {
+      especialidades: select("core").getEntityRecords("postType", "especialidades", {
+        per_page: cantidadMostrar
+      }),
+      onChangeCantidadMostrar: onChangeCantidadMostrar,
+      props: props
+    };
+  })(function (_ref) {
+    var especialidades = _ref.especialidades,
+        onChangeCantidadMostrar = _ref.onChangeCantidadMostrar,
+        props = _ref.props;
+    console.log(especialidades); // extraer los props
+
+    var cantidadMostrar = props.attributes.cantidadMostrar; // Verificar especialidades
+
+    if (!especialidades) {
+      return "Cargando...";
+    } // Si no hay especialidades
+
+
+    if (especialidades && especialidades.length === 0) {
+      return 'No hay resultados';
+    } // codigo react
+
+
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(PanelBody, {
+      title: "Cantidad a Mostrar",
+      initialOpen: true
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+      className: "components-base-control"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+      className: "components-base-control__field"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("label", {
+      className: "components-base-control__label"
+    }, "Cantidad a Mostrar"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RangeControl, {
+      onChange: onChangeCantidadMostrar,
+      min: 2,
+      max: 10,
+      value: cantidadMostrar || 4
+    }))))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", {
+      className: "titulo-menu"
+    }, "prueba"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("ul", {
+      className: "nuestro-menu"
+    }, especialidades.map(function (especialidad) {
+      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("li", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("img", {
+        src: especialidad.imagen_destacada
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+        className: "platillo"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+        className: "precio-titulo"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h3", null, especialidad.title.rendered), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", null, "$ ", especialidad.precio)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+        className: "contenido-platillo"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText.Content, {
+        value: especialidad.content.rendered.substring(0, 180)
+      })))));
+    })));
+  }),
+  save: function save() {
+    return null;
+  }
+});
 
 /***/ }),
 

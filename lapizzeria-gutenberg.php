@@ -76,7 +76,85 @@ function lapizzeria_registrar_bloques() {
         'editor_style' => 'lapizzeria-editor-styles', // estilos para el editor
         'style' => 'lapizzeria-frontend-styles' // estilos para el front end
     ));
+
+  /** Registar un bloque dinamico */
+  register_block_type( 'lapizzeria/menu', array(
+    'editor_script' => 'lapizzeria-editor-script', // script principal para editor
+    'editor_style' => 'lapizzeria-editor-styles', // estilos para el editor
+    'style' => 'lapizzeria-frontend-styles', // estilos para el front end
+    'render_callback' => 'lapizzeria_especialidades_front_end' // Query a la base de datos
+) );  
 }
 
 }  
 add_action('init', 'lapizzeria_registrar_bloques');
+
+
+
+ /** Consulta la base de datos para mostrar los resultados en el front end*/
+function lapizzeria_especialidades_front_end($atts) {
+
+  // echo "<pre>";
+  // var_dump($atts);
+  // echo "</pre>";
+
+  // Extraer los valores y agregar defaults
+ $cantidad = $atts['cantidadMostrar'] ? $atts['cantidadMostrar'] : 4;
+ $titulo_bloque = $atts['tituloBloque'] ? $atts['tituloBloque'] : 'Nuestras Especialidades';
+ $tax_query = array();
+
+ if(isset($atts['categoriaMenu'])){
+     $tax_query[] =  array(
+         'taxonomy' => 'categoria-menu',
+         'terms' => $atts['categoriaMenu'],
+         'field' => 'term_id'
+     );
+ }
+
+ // Obtener los datos del Query
+ $especialidades = wp_get_recent_posts(array(
+     'post_type' => 'especialidades',
+     'post_status' => 'publish',
+     'numberposts' => $cantidad,
+     'tax_query' => $tax_query
+ ));
+
+ // Revisar que haya resultados
+ if(count($especialidades) == 0 ) {
+     return 'No hay Especialidades';
+ }
+
+ $cuerpo = '';
+ $cuerpo .= '<h2 class="titulo-menu">';
+ $cuerpo .= $titulo_bloque;
+ $cuerpo .= '</h2>';
+ $cuerpo .= '<ul class="nuestro-menu">';
+ foreach($especialidades as $esp):
+     // obtener un objeto del post
+     $post = get_post( $esp['ID'] );
+     setup_postdata($post);
+
+     $cuerpo .= sprintf(
+         '<li>
+             %1$s
+             <div class="platillo">
+                 <div class="precio-titulo">
+                     <h3>%2$s</h3>
+                     <p>$ %3$s</p>
+                 </div>
+                 <div class="contenido-platillo">
+                     <p>%4$s</p>
+                 </div>
+             </div>
+         </li>', 
+         get_the_post_thumbnail($post, 'especialidades'),
+         get_the_title($post),
+         get_field('precio', $post),
+         get_the_content($post)
+     );
+     wp_reset_postdata();
+ endforeach;
+ $cuerpo .= '</ul>';
+
+ return $cuerpo;
+}
