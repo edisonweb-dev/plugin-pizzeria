@@ -86,6 +86,78 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
+      arr2[i] = arr[i];
+    }
+
+    return arr2;
+  }
+}
+
+module.exports = _arrayWithoutHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArray.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArray.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+}
+
+module.exports = _iterableToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableSpread.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableSpread.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
+}
+
+module.exports = _nonIterableSpread;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/toConsumableArray.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/toConsumableArray.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithoutHoles = __webpack_require__(/*! ./arrayWithoutHoles */ "./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js");
+
+var iterableToArray = __webpack_require__(/*! ./iterableToArray */ "./node_modules/@babel/runtime/helpers/iterableToArray.js");
+
+var nonIterableSpread = __webpack_require__(/*! ./nonIterableSpread */ "./node_modules/@babel/runtime/helpers/nonIterableSpread.js");
+
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || nonIterableSpread();
+}
+
+module.exports = _toConsumableArray;
+
+/***/ }),
+
 /***/ "./src/boxes/index.js":
 /*!****************************!*\
   !*** ./src/boxes/index.js ***!
@@ -297,9 +369,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _pizzeria_icon_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../pizzeria-icon.svg */ "./src/pizzeria-icon.svg");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _pizzeria_icon_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pizzeria-icon.svg */ "./src/pizzeria-icon.svg");
+
 
 var registerBlockType = wp.blocks.registerBlockType;
 var withSelect = wp.data.withSelect;
@@ -310,35 +385,33 @@ var _wp$components = wp.components,
     PanelBody = _wp$components.PanelBody,
     RangeControl = _wp$components.RangeControl,
     SelectControl = _wp$components.SelectControl,
-    TextControl = _wp$components.TextControl;
+    TextControl = _wp$components.TextControl; // Logo para el bloque
 
-/**  
-        ---7 Pasos para crear un Bloque en Gutenberg ---
-    1.- Importar el componente(s) que utilizarás
-    2.- Coloca el componente donde deseas utilizarlo.
-    3.- Crea una función que lea los contenidos
-    4.- Registra un atributo
-    5.- Extraer el contenido desde props
-    6.- Guarda el contenido con setAttributes
-    7.- Lee los contenidos guardados en save()
-*/
 
 registerBlockType("lapizzeria/menu", {
-  // JSON
   title: "La Pizzeria Menu",
   icon: {
-    src: _pizzeria_icon_svg__WEBPACK_IMPORTED_MODULE_1__["ReactComponent"]
+    src: _pizzeria_icon_svg__WEBPACK_IMPORTED_MODULE_2__["ReactComponent"]
   },
   category: "lapizzeria",
   attributes: {
     cantidadMostrar: {
-      type: 'number',
-      default: 4
+      type: "number"
+    },
+    categoriaMenu: {
+      type: "number"
+    },
+    tituloBloque: {
+      type: "string",
+      default: "Titulo Bloque"
     }
   },
   edit: withSelect(function (select, props) {
-    // extraer los valores
-    var cantidadMostrar = props.attributes.cantidadMostrar,
+    console.log(props); // extraer los valores
+
+    var _props$attributes = props.attributes,
+        cantidadMostrar = _props$attributes.cantidadMostrar,
+        categoriaMenu = _props$attributes.categoriaMenu,
         setAttributes = props.setAttributes;
 
     var onChangeCantidadMostrar = function onChangeCantidadMostrar(nuevaCantidad) {
@@ -347,20 +420,42 @@ registerBlockType("lapizzeria/menu", {
       });
     };
 
+    var onChangeCategoriaMenu = function onChangeCategoriaMenu(nuevaCategoria) {
+      setAttributes({
+        categoriaMenu: nuevaCategoria
+      });
+    };
+
+    var onChangeTituloBloque = function onChangeTituloBloque(nuevoTitulo) {
+      setAttributes({
+        tituloBloque: nuevoTitulo
+      });
+    };
+
     return {
+      categorias: select("core").getEntityRecords("taxonomy", "categoria-menu"),
+      // Enviar una petición a la api
       especialidades: select("core").getEntityRecords("postType", "especialidades", {
-        per_page: cantidadMostrar
+        "categoria-menu": categoriaMenu,
+        per_page: cantidadMostrar || 4
       }),
       onChangeCantidadMostrar: onChangeCantidadMostrar,
+      onChangeCategoriaMenu: onChangeCategoriaMenu,
+      onChangeTituloBloque: onChangeTituloBloque,
       props: props
     };
   })(function (_ref) {
-    var especialidades = _ref.especialidades,
+    var categorias = _ref.categorias,
+        especialidades = _ref.especialidades,
         onChangeCantidadMostrar = _ref.onChangeCantidadMostrar,
+        onChangeCategoriaMenu = _ref.onChangeCategoriaMenu,
+        onChangeTituloBloque = _ref.onChangeTituloBloque,
         props = _ref.props;
-    console.log(especialidades); // extraer los props
-
-    var cantidadMostrar = props.attributes.cantidadMostrar; // Verificar especialidades
+    // extraer los props
+    var _props$attributes2 = props.attributes,
+        cantidadMostrar = _props$attributes2.cantidadMostrar,
+        categoriaMenu = _props$attributes2.categoriaMenu,
+        tituloBloque = _props$attributes2.tituloBloque; // Verificar especialidades
 
     if (!especialidades) {
       return "Cargando...";
@@ -368,38 +463,85 @@ registerBlockType("lapizzeria/menu", {
 
 
     if (especialidades && especialidades.length === 0) {
-      return 'No hay resultados';
-    } // codigo react
+      return "No hay resultados";
+    } // console.log(categorias);
+    // Verificar categorias
 
 
-    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(PanelBody, {
+    if (!categorias) {
+      console.log("No hay categorias");
+      return null;
+    }
+
+    if (categorias && categorias.length === 0) {
+      console.log("No hay resultados");
+      return null;
+    } // Generar label y value a categorias
+
+
+    categorias.forEach(function (categoria) {
+      categoria["label"] = categoria.name;
+      categoria["value"] = categoria.id;
+    }); // Arreglo con valores por default
+
+    var opcionDefault = [{
+      value: "",
+      label: " -- Todos -- "
+    }];
+    var listadoCategorias = [].concat(opcionDefault, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(categorias));
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(PanelBody, {
       title: "Cantidad a Mostrar",
       initialOpen: true
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
       className: "components-base-control"
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
       className: "components-base-control__field"
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("label", {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("label", {
       className: "components-base-control__label"
-    }, "Cantidad a Mostrar"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RangeControl, {
+    }, "Cantidad a Mostrar"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(RangeControl, {
       onChange: onChangeCantidadMostrar,
       min: 2,
       max: 10,
       value: cantidadMostrar || 4
-    }))))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", {
+    })))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(PanelBody, {
+      title: "Categoría de Especialidad",
+      initialOpen: false
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+      className: "components-base-control"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+      className: "components-base-control__field"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("label", {
+      className: "components-base-control__label"
+    }, "Categor\xEDa de Especialidad"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(SelectControl, {
+      options: listadoCategorias,
+      onChange: onChangeCategoriaMenu,
+      value: categoriaMenu
+    })))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(PanelBody, {
+      title: "Titulo Bloque",
+      initialOpen: false
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+      className: "components-base-control"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+      className: "components-base-control__field"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("label", {
+      className: "components-base-control__label"
+    }, "Titulo Bloque"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
+      onChange: onChangeTituloBloque,
+      value: tituloBloque
+    }))))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("h2", {
       className: "titulo-menu"
-    }, "prueba"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("ul", {
+    }, tituloBloque), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("ul", {
       className: "nuestro-menu"
     }, especialidades.map(function (especialidad) {
-      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("li", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("img", {
+      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("li", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
         src: especialidad.imagen_destacada
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "platillo"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "precio-titulo"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h3", null, especialidad.title.rendered), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", null, "$ ", especialidad.precio)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("h3", null, especialidad.title.rendered), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", null, "$ ", especialidad.precio)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "contenido-platillo"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RichText.Content, {
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(RichText.Content, {
         value: especialidad.content.rendered.substring(0, 180)
       })))));
     })));
