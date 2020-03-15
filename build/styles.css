@@ -43,13 +43,6 @@
   font-size: 1.4rem;
   line-height: 1.5;
 }
-.wp-block-image{
-  margin: 0 !important;
-}
-.wp-block-column{
-  margin-left: 0 !important;
-  overflow: hidden;
-}
 .cajas-nosotros .wp-block-image {
   margin: 0;   
   overflow: hidden;
@@ -60,12 +53,6 @@
   object-fit: cover;
   height: 30rem;
   width: 100%;
-}
-
-.wp-block-image{
-  margin: 0;   
-  overflow: hidden;
-  height: 24rem;
 }
 
 /** Bloque Menu**/
